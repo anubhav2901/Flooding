@@ -43,6 +43,7 @@ print("Testing matrix shape", x_test.shape)
 
 #define the MLP model
 num_nodes = 1000                      #number of nodes in hidden layers
+batch_size = 200
 
 model = tf.keras.Sequential()
 model.add(Dense(num_nodes, input_shape=(784,), activation="relu"))
@@ -55,7 +56,7 @@ b = 0.01
 
 SGD = tf.keras.optimizers.SGD(learning_rate=0.1, momentum=0.9,)
 model.compile(loss=flood_categorical_crossentropy, optimizer=SGD, metrics=["mse", "acc"])
-history = model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+history = model.fit(x_train, y_train, batch_size=batch_size, epochs=10, validation_data=(x_test, y_test))
 model.evaluate(x_test,  y_test, verbose=2)
 
 #plot figure
@@ -73,7 +74,7 @@ model1.add(Dense(num_classes, activation="softmax"))
 
 SGD = tf.keras.optimizers.SGD(learning_rate=0.1, momentum=0.9,)
 model1.compile(loss="categorical_crossentropy", optimizer=SGD, metrics=["mse", "acc"])
-history1 = model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+history1 = model1.fit(x_train, y_train, batch_size=batch_size, epochs=10, validation_data=(x_test, y_test))
 model1.evaluate(x_test,  y_test, verbose=2)
 
 fig = plt.figure()
