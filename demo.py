@@ -55,7 +55,7 @@ b = 0.01
 
 SGD = tf.keras.optimizers.SGD(learning_rate=0.1, momentum=0.9,)
 model.compile(loss=flood_categorical_crossentropy, optimizer=SGD, metrics=["mse", "acc"])
-history = model.fit(x_train, y_train, batch_size=batch_size, epochs=10, validation_data=(x_test, y_test))
+history = model.fit(x_train, y_train, batch_size=batch_size, epochs=10, validation_data=(x_test, y_test), verbose=0)
 model.evaluate(x_test,  y_test, verbose=2)
 
 #plot figure
@@ -73,7 +73,7 @@ model1.add(Dense(num_classes, activation="softmax"))
 
 SGD = tf.keras.optimizers.SGD(learning_rate=0.1, momentum=0.9,)
 model1.compile(loss="categorical_crossentropy", optimizer=SGD, metrics=["mse", "acc"])
-history1 = model1.fit(x_train, y_train, batch_size=batch_size, epochs=10, validation_data=(x_test, y_test))
+history1 = model1.fit(x_train, y_train, batch_size=batch_size, epochs=10, validation_data=(x_test, y_test), verbose=0)
 model1.evaluate(x_test,  y_test, verbose=2)
 
 fig = plt.figure()
@@ -82,3 +82,5 @@ plt.plot(history1.history['val_loss'], label="Test loss")
 plt.legend()
 plt.show()
 
+print("Testing Loss: ", history1.history['val_loss'][-1])
+print("Testing Loss w/ Flooding: ", history.history['val_loss'][-1])
