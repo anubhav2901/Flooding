@@ -3,7 +3,6 @@ import tensorflow as tf
 from keras.layers import Dense
 
 import matplotlib.pyplot as plt
-from utils.flood_losses import *
 
 def flood_categorical_crossentropy(y_true, y_pred):
     loss = tf.keras.losses.categorical_crossentropy(y_true, y_pred)
