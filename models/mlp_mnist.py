@@ -3,7 +3,6 @@ import tensorflow as tf
 from keras.layers import Dense
 
 import matplotlib.pyplot as plt
-from utils.flood_losses import *
 
 #testing flooding for MNIST
 
@@ -46,19 +45,27 @@ model.add(Dense(num_classes, activation="softmax"))
 
 
 #set flood value
-b = 0.01                              #select ranges of value of b
+b = 0.01                              #selecting value of b from {0.01 .. 0.1}
+
+#for categorical crossentropy
+def flood_categorical_crossentropy(y_true, y_pred):
+    loss = tf.keras.losses.categorical_crossentropy(y_true, y_pred)
+    loss = tf.math.abs(loss - b) + b
+    return loss
 
 SGD = tf.keras.optimizers.SGD(learning_rate=0.1, momentum=0.9,)
 model.compile(loss=flood_categorical_crossentropy, optimizer=SGD, metrics=["mse", "acc"])
-history = model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+history = model.fit(x_train, y_train, epochs=100, validation_data=(x_test, y_test))
 model.evaluate(x_test,  y_test, verbose=2)
 
-#plot figure
+#plot loss
+'''
 fig = plt.figure()
 plt.plot(history.history['loss'], label="Train loss")
 plt.plot(history.history['val_loss'], label="Test loss")
 plt.legend()
 plt.show()
+'''
 
 #define the MLP model1
 model1 = tf.keras.Sequential()
@@ -67,13 +74,33 @@ model1.add(Dense(num_nodes, activation="relu"))
 model1.add(Dense(num_classes, activation="softmax"))
 
 SGD = tf.keras.optimizers.SGD(learning_rate=0.1, momentum=0.9,)
-model1.compile(loss="categorical_crossentropy", optimizer=SGD, metrics=["mse", "acc"])
-history1 = model.fit(x_train, y_train, epochs=50, validation_data=(x_test, y_test))
+model1.compile(loss="categorical_crossentropy", optimizer=SGD, metrics=["mse", "acc"])  #using categorical_crossentropy loss
+history1 = model.fit(x_train, y_train, epochs=100, validation_data=(x_test, y_test))
 model1.evaluate(x_test,  y_test, verbose=2)
 
+#plot loss
+'''
 fig = plt.figure()
 plt.plot(history1.history['loss'], label="Train loss")
 plt.plot(history1.history['val_loss'], label="Test loss")
 plt.legend()
 plt.show()
+'''
 
+#comparing accuracies
+fig = plt.figure()
+plt.plot(history1.history['acc'], label="Training acc")
+plt.plot(history.history['acc'], label="Training acc w/ flooding")
+plt.plot(history1.history['val_acc'], label="Testing acc")
+plt.plot(history.history['val_acc'], label='Tesiting acc w/ flooding')
+plt.legend()
+plt.show()
+
+#comparing losses
+fig = plt.figure()
+plt.plot(history1.history['loss'], label="Training loss")
+plt.plot(history.history['loss'], label="Training loss w/ flooding")
+plt.plot(history1.history['val_loss'], label="Testing loss")
+plt.plot(history.history['val_loss'], label='Testing loss w/ flooding')
+plt.legend()
+plt.show()
