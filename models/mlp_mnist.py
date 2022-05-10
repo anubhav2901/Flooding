@@ -75,7 +75,7 @@ model1.add(Dense(num_classes, activation="softmax"))
 
 SGD = tf.keras.optimizers.SGD(learning_rate=0.1, momentum=0.9,)
 model1.compile(loss="categorical_crossentropy", optimizer=SGD, metrics=["mse", "acc"])  #using categorical_crossentropy loss
-history1 = model.fit(x_train, y_train, epochs=100, validation_data=(x_test, y_test))
+history1 = model1.fit(x_train, y_train, epochs=100, validation_data=(x_test, y_test))
 model1.evaluate(x_test,  y_test, verbose=2)
 
 #plot loss
